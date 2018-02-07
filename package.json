@@ -1,5 +1,5 @@
 {
-  "name": "@sealsystems/node-failure",
+  "name": "@sealsystems/failure",
   "version": "1.0.0",
   "description": "Easy handling of error codes and metadata.",
   "author": {
