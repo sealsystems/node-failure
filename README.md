@@ -1,5 +1,8 @@
 # @sealsystems/failure
 
+[![CircleCI](https://circleci.com/gh/sealsystems/node-failure.svg?style=svg)](https://circleci.com/gh/sealsystems/node-failure)
+[![AppVeyor](https://ci.appveyor.com/api/projects/status/abvu4p3jf87kusxb?svg=true)](https://ci.appveyor.com/project/Plossys/node-failure)
+
 Easy handling of error codes and metadata.
 
 ## Installation
