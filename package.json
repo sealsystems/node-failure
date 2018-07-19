@@ -20,10 +20,10 @@
   "main": "lib/failure.js",
   "dependencies": {},
   "devDependencies": {
-    "@sealsystems/eslint-config-es": "1.0.0",
-    "assertthat": "0.11.0",
-    "roboter": "0.15.4",
-    "roboter-server": "0.15.4"
+    "@sealsystems/eslint-config-es": "1.1.1",
+    "assertthat": "1.0.0",
+    "roboter": "0.16.0",
+    "roboter-server": "0.16.0"
   },
   "repository": {
     "type": "git",
