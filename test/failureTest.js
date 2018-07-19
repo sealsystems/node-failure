@@ -110,4 +110,29 @@ suite('fileupload.failure', () => {
     });
     done();
   });
+
+  test('isFailure returns false for undefined values', (done) => {
+    assert.that(failure.isFailure()).is.false();
+    done();
+  });
+
+  test('isFailure returns false if name is not defined', (done) => {
+    assert.that(failure.isFailure({})).is.false();
+    done();
+  });
+
+  test('isFailure returns false if name is not SealError', (done) => {
+    assert.that(failure.isFailure({ name: 'buhu' })).is.false();
+    done();
+  });
+
+  test('isFailure returns false if code is node defined', (done) => {
+    assert.that(failure.isFailure({ name: 'SealError' })).is.false();
+    done();
+  });
+
+  test('isFailure returns true if value is a failure', (done) => {
+    assert.that(failure.isFailure(failure(1, 'huhu'))).is.true();
+    done();
+  });
 });
