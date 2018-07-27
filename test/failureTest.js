@@ -4,7 +4,7 @@ const assert = require('assertthat');
 
 const failure = require('../lib/failure');
 
-suite('fileupload.failure', () => {
+suite('failure', () => {
   test('is a function', async () => {
     assert.that(failure).is.ofType('function');
   });
@@ -119,5 +119,18 @@ suite('fileupload.failure', () => {
 
   test('isFailure returns true if value is a failure', async () => {
     assert.that(failure.isFailure(failure(1, 'huhu'))).is.true();
+  });
+
+  test('assert throws if error is not a failure', async () => {
+    try {
+      failure.assert(new Error('Throw Me'));
+      throw new Error('X');
+    } catch (errAssert) {
+      assert.that(errAssert.message).is.equalTo('Throw Me');
+    }
+  });
+
+  test('assert simply returns if error is a failure', async () => {
+    failure.assert(failure(409, 'Do Not Throw This'));
   });
 });
