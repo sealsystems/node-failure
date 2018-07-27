@@ -25,7 +25,7 @@ Then you can create an error object.
 const err = failure(42, 'Universal error.', { username: 'hugo' });
 ```
 
-This creates an object of type `Error` with some additional properties:
+This creates an new object of type `Error` with some additional properties:
 
 ```javascript
 {
@@ -113,3 +113,29 @@ error      object   mandatory   previously created error object
 ```
 
 Result: JSON string of plain object created by `httpExport`
+
+### Test for failure
+
+For testing if an error is a failure you can call `isFailure` function.
+
+```javascript
+if (failure.isFailure(error)) { ... }
+```
+
+Parameter:
+```
+error      object   mandatory   the error object to test
+```
+
+### Assert failure
+
+The assert function throws if the error is NOT(!) a failure.
+
+```javascript
+failure.assert(error);
+```
+
+Parameter:
+```
+error      object   mandatory   the error object to test
+```
