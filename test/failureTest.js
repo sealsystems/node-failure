@@ -30,27 +30,87 @@ suite('failure', () => {
     assert.that(err.name).is.equalTo('SealError');
     assert.that(err.message).is.equalTo('huhu');
     assert.that(err.code).is.equalTo(0);
-    assert.that(err.metadata).is.equalTo({});
+    assert.that(err.metadata).is.equalTo({
+      kbcode: '@sealsystems/failure.undefined'
+    });
   });
 
-  test('returns SealError with given values', async () => {
-    const err = failure(123, 'hopperla', { user: 'hugo' });
+  test('returns SealError with all given values', async () => {
+    const err = failure('hopperla', 123, { user: 'hugo' });
 
     assert.that(err).is.not.null();
     assert.that(err.name).is.equalTo('SealError');
     assert.that(err.message).is.equalTo('hopperla');
     assert.that(err.code).is.equalTo(123);
-    assert.that(err.metadata).is.equalTo({ user: 'hugo' });
+    assert.that(err.metadata).is.equalTo({
+      user: 'hugo',
+      kbcode: '@sealsystems/failure.undefined'
+    });
   });
 
-  test('converts code of type string', async () => {
-    const err = failure('456', 'einstring');
+  test('returns SealError with given code only', async () => {
+    const err = failure('hopperla2', 666);
 
     assert.that(err).is.not.null();
     assert.that(err.name).is.equalTo('SealError');
-    assert.that(err.message).is.equalTo('einstring');
-    assert.that(err.code).is.equalTo(456);
-    assert.that(err.metadata).is.equalTo({});
+    assert.that(err.message).is.equalTo('hopperla2');
+    assert.that(err.code).is.equalTo(666);
+    assert.that(err.metadata).is.equalTo({
+      kbcode: '@sealsystems/failure.undefined'
+    });
+  });
+
+  test('returns SealError with given metadata only', async () => {
+    const err = failure('hopperla3', { test: true });
+
+    assert.that(err).is.not.null();
+    assert.that(err.name).is.equalTo('SealError');
+    assert.that(err.message).is.equalTo('hopperla3');
+    assert.that(err.code).is.equalTo(0);
+    assert.that(err.metadata).is.equalTo({
+      test: true,
+      kbcode: '@sealsystems/failure.undefined'
+    });
+  });
+
+  test('returns SealError with kbcode from errors.js', async () => {
+    const err = failure('Chainable object is missing.', { user: 'hansi' });
+
+    assert.that(err).is.not.null();
+    assert.that(err.name).is.equalTo('SealError');
+    assert.that(err.message).is.equalTo('Chainable object is missing.');
+    assert.that(err.code).is.equalTo(0);
+    assert.that(err.metadata).is.equalTo({
+      user: 'hansi',
+      kbcode: '@sealsystems/failure.2'
+    });
+  });
+
+  test('chains errors', async () => {
+    const err1 = failure('Chainable object is missing.', { user: 'hansi' });
+    const err2 = failure('Message is missing.').chain(err1);
+
+    assert.that(err2.name).is.equalTo('SealError');
+    assert.that(err2.message).is.equalTo('Message is missing.');
+    assert.that(err2.code).is.equalTo(0);
+    assert.that(err2.metadata).is.equalTo({
+      kbcode: '@sealsystems/failure.1',
+      cause: {
+        code: 0,
+        message: 'Chainable object is missing.',
+        metadata: {
+          user: 'hansi',
+          kbcode: '@sealsystems/failure.2'
+        }
+      }
+    });
+  });
+
+  test('throws error if no error object is given', async () => {
+    assert.that(() => {
+      failure('huhu').chain();
+      throw new Error('X');
+    }).is.throwing('Chainable object is missing.');
   });
 
   test('has httpExport function', async () => {
@@ -58,13 +118,14 @@ suite('failure', () => {
   });
 
   test('httpExport exports plain object with properties', async () => {
-    const err = failure(123, 'hopperla', { user: 'hugo' });
+    const err = failure('hopperla', 123, { user: 'hugo' });
 
     assert.that(failure.httpExport(err)).is.equalTo({
       message: 'hopperla',
       code: 123,
       metadata: {
-        user: 'hugo'
+        user: 'hugo',
+        kbcode: '@sealsystems/failure.undefined'
       }
     });
   });
@@ -74,13 +135,14 @@ suite('failure', () => {
   });
 
   test('jsonHttpExport exports JSON string with properties', async () => {
-    const err = failure(123, 'hopperla', { user: 'hugo' });
+    const err = failure('hopperla', 123, { user: 'hugo' });
 
     assert.that(failure.jsonHttpExport(err)).is.equalTo(JSON.stringify({
       code: 123,
       message: 'hopperla',
       metadata: {
-        user: 'hugo'
+        user: 'hugo',
+        kbcode: '@sealsystems/failure.undefined'
       }
     }));
   });
@@ -90,14 +152,15 @@ suite('failure', () => {
   });
 
   test('joinMeta returns enhanced metadata', async () => {
-    const err = failure(123, 'hopperla', { user: 'hugo' });
+    const err = failure('hopperla', 123, { user: 'hugo' });
     const meta = failure.joinMeta(err, {
       document: 'nixda'
     });
 
     assert.that(meta).is.equalTo({
       user: 'hugo',
-      document: 'nixda'
+      document: 'nixda',
+      kbcode: '@sealsystems/failure.undefined'
     });
   });
 
@@ -109,28 +172,11 @@ suite('failure', () => {
     assert.that(failure.isFailure({})).is.false();
   });
 
-  test('isFailure returns false if name is not SealError', async () => {
-    assert.that(failure.isFailure({ name: 'buhu' })).is.false();
-  });
-
-  test('isFailure returns false if code is node defined', async () => {
+  test('isFailure returns false if object is not inherited from SealFailure', async () => {
     assert.that(failure.isFailure({ name: 'SealError' })).is.false();
   });
 
-  test('isFailure returns true if value is a failure', async () => {
-    assert.that(failure.isFailure(failure(1, 'huhu'))).is.true();
-  });
-
-  test('assert throws if error is not a failure', async () => {
-    try {
-      failure.assert(new Error('Throw Me'));
-      throw new Error('X');
-    } catch (errAssert) {
-      assert.that(errAssert.message).is.equalTo('Throw Me');
-    }
-  });
-
-  test('assert simply returns if error is a failure', async () => {
-    failure.assert(failure(409, 'Do Not Throw This'));
+  test('isFailure returns true if value is a failure generated SealError', async () => {
+    assert.that(failure.isFailure(failure('huhu', 1))).is.true();
   });
 });

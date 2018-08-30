@@ -5,6 +5,14 @@
 
 Easy handling of error codes and metadata.
 
+---
+
+## Attention
+
+Beginning with version 2.0.0 the argument order of `failure` function changed! See description below.
+
+---
+
 ## Installation
 
 ```bash
@@ -22,7 +30,7 @@ const failure = require('@sealsystems/failure');
 Then you can create an error object.
 
 ```javascript
-const err = failure(42, 'Universal error.', { username: 'hugo' });
+const err = failure('Universal error.', 42, { username: 'hugo' });
 ```
 
 This creates an new object of type `Error` with some additional properties:
@@ -41,22 +49,37 @@ This creates an new object of type `Error` with some additional properties:
 
 ## API
 
-### Creating an error objects
+### Creating an error object
 
-Create a new object of type `Error`.
+The `failure` function creates a new object of type `Error`. It expects the file `errors.js` to exist in callers module `lib` subdirectory if the calling script resides in `bin`, `lib` or `test` subdirectories. The map defined by `errors.js` is used to set the `metadata.kbcode` entry automatically.
 
 ```javascript
-const error = failure(code, message, metadata);
+const error = failure(message, code, metadata);
 ```
 
 Parameter:
 ```
-code       number   optional    error code
 message    string   mandatory   error message
+code       number   optional    error code
 metadata   object   optional    error metadata
 ```
 
 Result: new error object
+
+### Chaining error history
+
+For creating a history of errors while throwing upward in callstack every error object has the `chain` method.
+
+```javascript
+myError.chain(previousError);
+```
+
+Parameter:
+```
+previousError   object   mandatory    error object returned by a previously called function
+```
+
+Result: the callers error object, to make calls to `chain` chainable. Each `chain` stores the data of the given error object into `metadata.cause`.
 
 ### Join metadata
 
@@ -120,19 +143,6 @@ For testing if an error is a failure you can call `isFailure` function.
 
 ```javascript
 if (failure.isFailure(error)) { ... }
-```
-
-Parameter:
-```
-error      object   mandatory   the error object to test
-```
-
-### Assert failure
-
-The assert function throws if the error is NOT(!) a failure.
-
-```javascript
-failure.assert(error);
 ```
 
 Parameter:
