@@ -1,36 +1,25 @@
-# @sealsystems/failure
-
-[![CircleCI](https://circleci.com/gh/sealsystems/node-failure.svg?style=svg)](https://circleci.com/gh/sealsystems/node-failure)
-[![AppVeyor](https://ci.appveyor.com/api/projects/status/abvu4p3jf87kusxb?svg=true)](https://ci.appveyor.com/project/Plossys/node-failure)
+# @sealsystems/error
 
 Easy handling of error codes and metadata.
-
----
-
-## Attention
-
-Beginning with version 2.0.0 the argument order of `failure` function changed! See description below.
-
----
 
 ## Installation
 
 ```bash
-npm install @sealsystems/failure
+npm install @sealsystems/error
 ```
 
 ## Quick start
 
-First you need to add a reference to @sealsystems/failure within your application.
+First you need to add a reference to @sealsystems/error within your application.
 
 ```javascript
-const failure = require('@sealsystems/failure');
+const SealError = require('@sealsystems/error');
 ```
 
 Then you can create an error object.
 
 ```javascript
-const err = failure('Universal error.', 42, { username: 'hugo' });
+const err = new SealError('Universal error.', 42, { username: 'hugo' });
 ```
 
 This creates an new object of type `Error` with some additional properties:
@@ -51,10 +40,10 @@ This creates an new object of type `Error` with some additional properties:
 
 ### Creating an error object
 
-The `failure` function creates a new object of type `Error`. It expects the file `errors.js` to exist in callers module `lib` subdirectory if the calling script resides in `bin`, `lib` or `test` subdirectories. The map defined by `errors.js` is used to set the `metadata.kbcode` entry automatically.
+The constructor function creates a new object of type `Error`. It expects the file `errors.js` to exist in callers module `lib` subdirectory if the calling script resides in `bin`, `lib` or `test` subdirectories. The map defined by `errors.js` is used to set the `metadata.kbcode` entry automatically.
 
 ```javascript
-const error = failure(message, code, metadata);
+const err = new SealError(message, code, metadata);
 ```
 
 Parameter:
@@ -88,28 +77,32 @@ Join metadata and error object metadata into a new metadata object for extended 
 **Attention**: This function does not alter the errors metadata, it just returns a new metadata object.
 
 ```javascript
-const joinedMeta = failure.joinMeta(error, metadata);
+const joinedMeta = error.joinMeta(metadata);
 ```
 
 Parameter:
 ```
-error      object   mandatory   previously created error object
 metadata   object   mandatory   additional metadata to join
 ```
 
 Result: new metadata object
 
-### Export plain object
+### Get plain data object
 
-Export a plain new object for return in REST-API.
+Plain data objects without functions are useful e.g. for logging or returning errors in an http body.
+This module provides two ways to get a plain data object.
+
+#### plain
+
+The static function `plain` takes an arbitrary object of type `Error` and returns a new plain data object.
 
 ```javascript
-const plainNewObject = failure.httpExport(error);
+const plainNewObject = SealError.plain(error);
 ```
 
 Parameter:
 ```
-error      object   mandatory   previously created error object
+error      object   mandatory   error object
 ```
 
 Result: new plain javascript object of this structure:
@@ -122,30 +115,22 @@ Result: new plain javascript object of this structure:
 }
 ```
 
-### Export JSON string
+#### normalize
 
-Export plain error object as JSON string for return in REST-API without bodyparser.
-
-```javascript
-const stringifiedObject = failure.jsonHttpExport(error);
-```
-
-Parameter:
-```
-error      object   mandatory   previously created error object
-```
-
-Result: JSON string of plain object created by `httpExport`
-
-### Test for failure
-
-For testing if an error is a failure you can call `isFailure` function.
+The member function `normalize` returns a plain data object of the calling `@sealsystems/error` object.
 
 ```javascript
-if (failure.isFailure(error)) { ... }
+const plainNewObject = error.normalize();
 ```
 
-Parameter:
+Result: new plain javascript object as descriped above.
+
+### Get JSON string
+
+The member function `stringify` returns a stringified JSON representation of the errors plain data.
+
+```javascript
+const stringifiedData = error.stringify();
 ```
-error      object   mandatory   the error object to test
-```
+
+Result: JSON string of plain data object created by `plain`.
