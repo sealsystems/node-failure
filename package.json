@@ -31,5 +31,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/sealsystems/node-failure.git"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
