@@ -18,7 +18,9 @@
     "report": "npm run coverage && if [[ $OSTYPE == darwin* ]]; then open=open; else open=xdg-open; fi && $open coverage/lcov-report/index.html"
   },
   "main": "lib/failure.js",
-  "dependencies": {},
+  "dependencies": {
+    "v8-callsites": "^1.2.1"
+  },
   "devDependencies": {
     "@sealsystems/eslint-config-es": "1.1.1",
     "assertthat": "1.0.0",
@@ -29,5 +31,8 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/sealsystems/node-failure.git"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
