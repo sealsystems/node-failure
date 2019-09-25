@@ -10,17 +10,21 @@ suite('failure', () => {
   });
 
   test('throws error if no message if given', async () => {
-    assert.that(() => {
-      failure();
-      throw new Error('X');
-    }).is.throwing('Message is missing.');
+    assert
+      .that(() => {
+        failure();
+        throw new Error('X');
+      })
+      .is.throwing('Message is missing.');
   });
 
   test('throws error if code is not a number', async () => {
-    assert.that(() => {
-      failure('asdf', 'huhu');
-      throw new Error('X');
-    }).is.throwing('Illegal data type, "code" should be number.');
+    assert
+      .that(() => {
+        failure('asdf', 'huhu');
+        throw new Error('X');
+      })
+      .is.throwing('Illegal data type, "code" should be number.');
   });
 
   test('returns SealError with default values', async () => {
@@ -76,13 +80,15 @@ suite('failure', () => {
   test('jsonHttpExport exports JSON string with properties', async () => {
     const err = failure(123, 'hopperla', { user: 'hugo' });
 
-    assert.that(failure.jsonHttpExport(err)).is.equalTo(JSON.stringify({
-      code: 123,
-      message: 'hopperla',
-      metadata: {
-        user: 'hugo'
-      }
-    }));
+    assert.that(failure.jsonHttpExport(err)).is.equalTo(
+      JSON.stringify({
+        code: 123,
+        message: 'hopperla',
+        metadata: {
+          user: 'hugo'
+        }
+      })
+    );
   });
 
   test('has joinMeta function', async () => {
