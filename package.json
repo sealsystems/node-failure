@@ -16,7 +16,8 @@
     "test": "test-run",
     "test:coverage": "test-coverage",
     "test:coverage:check": "test-coverage-check",
-    "test:report": "test-report"
+    "test:report": "test-report",
+    "licenses": "license-checker --production --csv"
   },
   "main": "lib/failure.js",
   "dependencies": {},
@@ -28,5 +29,11 @@
   "repository": {
     "type": "git",
     "url": "git://github.com/sealsystems/node-failure.git"
+  },
+  "release": {
+    "extends": "@sealsystems/semantic-release/node-module"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
