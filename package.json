@@ -16,17 +16,24 @@
     "test": "test-run",
     "test:coverage": "test-coverage",
     "test:coverage:check": "test-coverage-check",
-    "test:report": "test-report"
+    "test:report": "test-report",
+    "licenses": "license-checker --production --csv"
   },
   "main": "lib/failure.js",
   "dependencies": {},
   "devDependencies": {
-    "@sealsystems/eslint-config-es": "3.5.3",
+    "@sealsystems/eslint-config-es": "3.5.4",
     "@sealsystems/mocha": "4.1.1",
     "@sealsystems/semantic-release": "4.0.12"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/sealsystems/node-failure.git"
+  },
+  "release": {
+    "extends": "@sealsystems/semantic-release/node-module"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
