@@ -1,3 +1,14 @@
+## 1.2.1 (2020-03-09)
+
+### Chores
+
+
+#### yoed ([f6ba810](https://github.com/sealsystems/node-failure/commit/f6ba810))
+
+
+
+---
+
 ## 1.2.0 (2019-10-08)
 
 ### Features
