@@ -1,3 +1,10 @@
+## 1.2.2 (2020-12-21)
+
+### Chores
+
+
+Trigger release ([dc361be](https://github.com/sealsystems/node-failure/commit/dc361be))
+
 ## 1.2.1 (2020-03-09)
 
 ### Chores
