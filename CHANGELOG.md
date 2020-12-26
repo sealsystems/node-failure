@@ -1,3 +1,12 @@
+## 1.2.3 (2020-12-26)
+
+### Chores
+
+
+Update build configuration ([cca04cf](https://github.com/sealsystems/node-failure/commit/cca04cf))
+
+Update build configuration ([375a239](https://github.com/sealsystems/node-failure/commit/375a239))
+
 ## 1.2.2 (2020-12-21)
 
 ### Chores
