@@ -1,3 +1,10 @@
+## 1.2.4 (2021-01-16)
+
+### Chores
+
+
+Update build config ([c0101cf](https://github.com/sealsystems/node-failure/commit/c0101cf))
+
 ## 1.2.3 (2020-12-26)
 
 ### Chores
